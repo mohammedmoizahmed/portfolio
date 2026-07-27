@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EC2 Portfolio Deployment | Mohammed Moiz Ahmed</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-main:#020617;
+      --bg-surface:#0b1120;
+      --text-main:#e5e7eb;
+      --text-muted:#9ca3af;
+      --border-soft:#1f2937;
+      --accent:#38bdf8;
+      --hover-glow:0 0 18px rgba(56,189,248,0.55);
+    }
+
+    body{
+      font-family:"Inter",system-ui;
+      background:var(--bg-main);
+      color:var(--text-main);
+      margin:0;
+      padding:0;
+      line-height:1.6;
+    }
+
+    .page{
+      max-width:900px;
+      margin:0 auto;
+      padding:40px 20px 80px;
+    }
+
+    h1{
+      font-size:32px;
+      font-weight:800;
+      margin-bottom:10px;
+    }
+
+    h2{
+      font-size:20px;
+      margin-top:30px;
+      margin-bottom:10px;
+      font-weight:700;
+    }
+
+    p{
+      color:#d1d5db;
+      font-size:15px;
+      margin-bottom:14px;
+    }
+
+    ul{
+      margin-left:20px;
+      margin-bottom:20px;
+    }
+
+    li{
+      margin-bottom:8px;
+      color:#cbd5f5;
+    }
+
+    .tag{
+      display:inline-block;
+      padding:6px 12px;
+      background:rgba(56,189,248,0.12);
+      border:1px solid var(--accent);
+      border-radius:999px;
+      margin-right:8px;
+      margin-bottom:10px;
+      font-size:13px;
+    }
+
+    .screenshot{
+      width:100%;
+      border-radius:10px;
+      margin-top:20px;
+      margin-bottom:30px;
+      border:1px solid var(--border-soft);
+      cursor:pointer;
+      transition:0.2s;
+    }
+
+    .screenshot:hover{
+      box-shadow:var(--hover-glow);
+      transform:translateY(-3px);
+    }
+
+    /* Small last image */
+    .screenshot-small{
+      width:40%;
+      display:block;
+      margin:20px auto 30px auto;
+      border-radius:10px;
+      border:1px solid var(--border-soft);
+      cursor:pointer;
+      transition:0.2s;
+    }
+
+    .screenshot-small:hover{
+      box-shadow:var(--hover-glow);
+      transform:translateY(-3px);
+    }
+
+    /* Image Preview Overlay */
+    #imgPreview{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.85);
+      display:none;
+      justify-content:center;
+      align-items:center;
+      z-index:9999;
+    }
+
+    #imgPreview img{
+      max-width:90%;
+      max-height:90%;
+      border-radius:10px;
+      border:2px solid var(--accent);
+    }
+
+    #closePreview{
+      position:absolute;
+      top:20px;
+      right:30px;
+      font-size:32px;
+      color:var(--accent);
+      cursor:pointer;
+      font-weight:800;
+    }
+
+    /* FIXED BACK BUTTON */
+    .back-btn{
+      position:fixed;
+      top:20px;
+      left:20px;
+      z-index:9999;
+      padding:10px 18px;
+      border-radius:999px;
+      background:var(--accent);
+      color:#021018;
+      font-weight:600;
+      text-decoration:none;
+      transition:0.2s;
+    }
+
+    .back-btn:hover{
+      box-shadow:var(--hover-glow);
+      transform:translateY(-3px);
+    }
+    
+    .img-caption {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 14px;
+  margin-top: 0px;     /* closest possible */
+  margin-bottom: 20px; /* spacing before next image */
+}
+  </style>
+</head>
+
+<body>
+
+  <!-- IMAGE PREVIEW OVERLAY -->
+  <div id="imgPreview">
+    <span id="closePreview">×</span>
+    <img id="previewImg" src="">
+  </div>
+
+  <!-- FIXED BACK BUTTON -->
+  <a href="index.html" class="back-btn">← Back to Portfolio</a>
+
+  <div class="page">
+
+    <h1>EC2 Portfolio Deployment (AWS Cloud Project)</h1>
+
+    <p>
+      I deployed my personal portfolio website on an AWS EC2 instance using Amazon Linux 2023 and the Apache (httpd) web server.
+      This project demonstrates my ability to configure cloud servers, manage networking, and host production-ready web applications. (The instance is not active currently as I am running the free tier, But it can be started anytime for proof).
+    </p>
+
+    <h2>Key Tasks Performed</h2>
+    <ul>
+      <li>Launched EC2 (Amazon Linux 2023) instance</li>
+      <li>Installed & configured Apache (httpd) web server</li>
+      <li>Uploaded HTML/CSS portfolio</li>
+      <li>Configured security groups (HTTP/SSH)</li>
+      <li>Tested desktop + mobile responsiveness</li>
+    </ul>
+
+    <h2>Tools Used</h2>
+    <span class="tag">AWS EC2</span>
+    <span class="tag">Amazon Linux 2023</span>
+    <span class="tag">Apache (httpd)</span>
+    <span class="tag">SSH</span>
+    <span class="tag">Security Groups</span>
+    <span class="tag">HTML/CSS</span>
+
+    <h2>Screenshots</h2>
+
+    <img src="images/ec2-dashboard.png" class="screenshot" onclick="openPreview(this.src)">
+    <p class="img-caption">EC2 instance dashboard showing system status, instance details, and running configuration.</p>
+    <img src="images/security-group.png" class="screenshot" onclick="openPreview(this.src)">
+    <p class="img-caption">Security Group configuration allowing HTTP (port 80) and SSH (port 22) access for the web server.</p>
+    <img src="images/apache-status.png" class="screenshot" onclick="openPreview(this.src)">
+    <p class="img-caption">Apache (httpd) service running successfully on Amazon Linux 2023, confirming the web server is active.</p>
+    <img src="images/html-folder.png" class="screenshot" onclick="openPreview(this.src)">
+    <p class="img-caption">Uploaded portfolio files inside /var/www/html, where Apache serves the website content.</p>
+    <img src="images/desktop-view.png" class="screenshot" onclick="openPreview(this.src)">
+    <p class="img-caption">Desktop version of the deployed portfolio, confirming responsive layout and correct rendering.</p>
+    <img src="images/mobile-view.png" class="screenshot-small" onclick="openPreview(this.src)">
+    <p class="img-caption">Mobile version of the portfolio, demonstrating full responsiveness on smaller screens.</p>
+
+  </div>
+
+  <script>
+    function openPreview(src){
+      document.getElementById("previewImg").src = src;
+      document.getElementById("imgPreview").style.display = "flex";
+    }
+
+    document.getElementById("closePreview").onclick = function(){
+      document.getElementById("imgPreview").style.display = "none";
+    };
+
+    document.getElementById("imgPreview").onclick = function(e){
+      if(e.target.id === "imgPreview"){
+        document.getElementById("imgPreview").style.display = "none";
+      }
+    };
+  </script>
+
+</body>
+</html>
