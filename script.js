@@ -55,6 +55,16 @@ function openProject(url) {
   }, 500);
 }
 
+// Fix: when returning to this page via swipe-back, the phone's back button,
+// or browser back/forward, mobile browsers often restore this exact page
+// from cache (bfcache) instead of reloading it — including the "fade-out"
+// class added right before we navigated away, which left it stuck at
+// opacity:0 (looking like a blank page). "pageshow" fires on that restore
+// too, so we clear the class every time to guarantee the page is visible.
+window.addEventListener('pageshow', function(event){
+  document.body.classList.remove('fade-out');
+});
+
 // Tagline animation for "Building. Testing. Breaking. Learning. Improving."
 // Desktop: types the full line left-to-right in place, pauses, clears, repeats.
 // Phone (<=600px): no typing/cursor movement — words fade in one at a time,
