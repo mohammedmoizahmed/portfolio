@@ -55,47 +55,125 @@ function openProject(url) {
   }, 500);
 }
 
-// Typewriter loop for the tagline ("Building. Testing. Breaking. Learning. Improving.")
-// Types the line left-to-right in place, pauses, clears, and repeats.
-(function startTaglineTypewriter(){
+// Tagline animation for "Building. Testing. Breaking. Learning. Improving."
+// Desktop: types the full line left-to-right in place, pauses, clears, repeats.
+// Phone (<=600px): no typing/cursor movement — words fade in one at a time,
+// held static on the left, then fade out and the next word fades in. Loops.
+(function initTaglineAnimation(){
   const textEl = document.getElementById('tagline-text');
   if (!textEl) return;
 
   const fullText = "Building. Testing. Breaking. Learning. Improving.";
-  const typingSpeed = 70;         // ms per character while typing
-  const pauseAfterTyping = 1600;  // ms to hold the full line before clearing
-  const pauseBeforeRetype = 300;  // ms blank pause before typing starts again
-  const startDelay = 900;         // ms wait so the intro fade-up finishes first
+  const words = ["Building.", "Testing.", "Breaking.", "Learning.", "Improving."];
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) {
-    textEl.textContent = fullText;
-    return;
-  }
+  const mobileQuery = window.matchMedia('(max-width: 600px)'); // phone breakpoint
 
-  let charIndex = 0;
+  let stopCurrent = null;
 
-  function typeStep(){
-    charIndex++;
-    textEl.textContent = fullText.slice(0, charIndex);
-    if (charIndex < fullText.length) {
-      setTimeout(typeStep, typingSpeed);
-    } else {
-      setTimeout(() => {
-        textEl.textContent = '';
-        charIndex = 0;
-        setTimeout(typeStep, pauseBeforeRetype);
-      }, pauseAfterTyping);
+  // Desktop / tablet: character-by-character typewriter loop
+  function runDesktopTypewriter(){
+    const typingSpeed = 70;         // ms per character while typing
+    const pauseAfterTyping = 1600;  // ms to hold the full line before clearing
+    const pauseBeforeRetype = 300;  // ms blank pause before typing starts again
+    const startDelay = 900;         // ms wait so the intro fade-up finishes first
+
+    let charIndex = 0;
+    let cancelled = false;
+    let timer = null;
+
+    function typeStep(){
+      if (cancelled) return;
+      charIndex++;
+      textEl.textContent = fullText.slice(0, charIndex);
+      if (charIndex < fullText.length) {
+        timer = setTimeout(typeStep, typingSpeed);
+      } else {
+        timer = setTimeout(() => {
+          if (cancelled) return;
+          textEl.textContent = '';
+          charIndex = 0;
+          timer = setTimeout(typeStep, pauseBeforeRetype);
+        }, pauseAfterTyping);
+      }
     }
+
+    timer = setTimeout(typeStep, startDelay);
+
+    return function stop(){
+      cancelled = true;
+      if (timer) clearTimeout(timer);
+    };
   }
 
-  function begin(){
-    setTimeout(typeStep, startDelay);
+  // Phone: static-position typewriter — types one word, pauses, deletes it,
+  // then types the next word in the exact same spot. Loops through all words.
+  function runMobileWordTypewriter(){
+    const typingSpeed = 70;       // ms per character while typing a word
+    const deletingSpeed = 40;     // ms per character while deleting a word
+    const holdMs = 900;           // ms to hold the finished word before deleting
+    const pauseBeforeNext = 250;  // ms blank pause before the next word starts typing
+    const startDelay = 900;       // ms wait so the intro fade-up finishes first
+
+    let wordIndex = 0;
+    let charIndex = 0;
+    let deleting = false;
+    let cancelled = false;
+    let timer = null;
+
+    function tick(){
+      if (cancelled) return;
+      const currentWord = words[wordIndex];
+
+      if (!deleting) {
+        charIndex++;
+        textEl.textContent = currentWord.slice(0, charIndex);
+        if (charIndex === currentWord.length) {
+          timer = setTimeout(() => { deleting = true; tick(); }, holdMs);
+        } else {
+          timer = setTimeout(tick, typingSpeed);
+        }
+      } else {
+        charIndex--;
+        textEl.textContent = currentWord.slice(0, charIndex);
+        if (charIndex === 0) {
+          deleting = false;
+          wordIndex = (wordIndex + 1) % words.length;
+          timer = setTimeout(tick, pauseBeforeNext);
+        } else {
+          timer = setTimeout(tick, deletingSpeed);
+        }
+      }
+    }
+
+    timer = setTimeout(tick, startDelay);
+
+    return function stop(){
+      cancelled = true;
+      if (timer) clearTimeout(timer);
+    };
   }
+
+  function start(){
+    if (stopCurrent) { stopCurrent(); stopCurrent = null; }
+    textEl.textContent = '';
+
+    if (prefersReduced) {
+      textEl.textContent = fullText;
+      return;
+    }
+
+    stopCurrent = mobileQuery.matches ? runMobileWordTypewriter() : runDesktopTypewriter();
+  }
+
+  function begin(){ start(); }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', begin);
   } else {
     begin();
   }
+
+  // Re-evaluate if the viewport crosses the phone breakpoint (resize/rotate)
+  mobileQuery.addEventListener('change', start);
 })();

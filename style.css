@@ -11,7 +11,7 @@
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
+html,body{height:100%;overflow-anchor:none}
 body{
   font-family:"Inter",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial;
   background:radial-gradient(circle at top,#0f172a 0,#020617 45%,#000 100%);
@@ -103,12 +103,25 @@ body{
 }
 
 .tagline{
+  position:relative;
   font-size:18px;
+  height:26px;
   color:var(--accent);
   font-weight:600;
   margin-bottom:18px;
   opacity:0;
   transform:translateY(6px);
+  overflow:hidden;
+  overflow-anchor:none;
+}
+
+.tagline-inner{
+  position:absolute;
+  top:0;
+  left:0;
+  display:inline-flex;
+  align-items:center;
+  height:100%;
   white-space:nowrap;
 }
 
@@ -414,4 +427,28 @@ body{
 
 .btn {
   text-decoration: none;
+}
+
+/* Phone only: simplify the Projects & About headings, and center both bio texts */
+@media (max-width:600px){
+  #projects .section-sub,
+  #about .section-sub{
+    display:none;
+  }
+
+  #projects .section-header,
+  #about .section-header{
+    justify-content:center;
+  }
+
+  #projects .section-title,
+  #about .section-title{
+    text-align:center;
+    width:100%;
+  }
+
+  .lead,
+  .about-text{
+    text-align:center;
+  }
 }
